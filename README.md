@@ -18,4 +18,6 @@ The Modern GraphQL Bootcamp (with Node.js and Apollo)
 - Scalar types
 - Custom types
 - Non-nullable variables
-- 
+- Resolver functions
+- Argumentos para resolver functions: parent, args, ctx e info
+

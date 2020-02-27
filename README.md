@@ -11,7 +11,11 @@ The Modern GraphQL Bootcamp (with Node.js and Apollo)
 - NPM Intellisense
 - Word Count
 
-## Section 1
+## Section 1 - Intro
+- Why GraphQL?
 
-## Section 2
-
+## Section 2 - Schemas and Queries
+- Scalar types
+- Custom types
+- Non-nullable variables
+- 

@@ -2,7 +2,7 @@ import { GraphQLServer } from 'graphql-yoga';
 
 // Scalar types - String, Boolean, Int, Float, ID // String!, Int!, ID! - this means that variable is non-nullable
 // Atenção com os IDs do author inteligados ao user
-// Demo user data
+// Demo user data - Isso são os Mocks, uma espécie de falso endpoind usado posteriormente para testes
 const users = [{
     id: '1',
     name: 'Ana',
@@ -40,19 +40,26 @@ const posts = [{
     author: '3'
 }]
 
-
 const comments = [{
     id: '1',
     text: 'Hello, i like it',
+    author: '3',
+    post: '10'
 }, {
     id: '2',
     text: 'Excellent!',
+    author: '1',
+    post: '10'
 }, {
     id: '3',
     text: 'Great Article!',
+    author: '2',
+    post: '11'
 }, {
     id: '4',
     text: 'Good job',
+    author: '4',
+    post: '11'
 }]
 
 // Type Definitions (Schema) - Custom Types
@@ -71,6 +78,7 @@ const typeDefs = `
         email: String!
         age: Int
         posts: [Post!]!
+        comments: [Comment!]!
     }
 
     type Post {
@@ -79,10 +87,14 @@ const typeDefs = `
         body: String!
         published: Boolean!
         author: User!
+        comments: [Comment!]!
     }
+
     type Comment {
         id: ID!
         text: String!
+        author: User!
+        post: Post!
     }
 `
 
@@ -128,10 +140,28 @@ const resolvers = {
             }
         }
     },
-    Post: {
+    Post: {// parent. dentro deste bloco significa que ele está puxando esta informação
         author(parent, args, ctx, info) {
             return users.find((user) => {
                 return user.id === parent.author
+            })
+        },
+        comments(parent, args, ctx, info) {
+            return comments.filter((comment) => {
+                return comment.post === parent.id // esta linha compara o comment post que é o ID com o ID do pai acima que é Post{}
+            })
+        }
+    },
+    // comment object
+    Comment: {
+        author(parent, args, ctx, info) {
+            return user.find((user) => {
+                return user.id === parent.author
+            })
+        },
+        post(parent, args, ctx, info) {
+            return posts.find((post) => {
+                return post.id === parent.post
             })
         }
     },
@@ -139,6 +169,11 @@ const resolvers = {
         posts(parent, args, ctx, info) {
             return posts.filter((post) => {
                 return post.author === parent.id
+            })
+        },
+        comments(parent, args, ctx, info) {
+            return comments.filter((comment) => {
+                return comment.author === parent.id
             })
         }
     }
